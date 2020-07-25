@@ -1,0 +1,154 @@
+git config --global --user.name "Foo Bar"
+git config --global --user.email "Some@email.com"
+git config --global --list
+git config --global core.editor "emacs -nw"
+
+# Clone from github
+git clone https://github.com/kjkomatsu/github-demo.git
+
+# Add and track a file
+git add start.txt
+git status
+
+# Push to github
+# origin - reference to GitHub repo, remote reference
+# master - master branch on remote repository
+git push origin master
+
+# Create a new project
+# This will create a folder for you
+git init fresh-project
+
+# Commit
+git add <files> (or git add .)
+git commit
+## Add (or stage) and commit for tracked files
+git commit -am "Add more ipsum text"
+git commit --amend # Fix a commit message
+
+# Setup remote github from existing local source
+git add .
+git commit -m "blah"
+git remote add origin https://github.com/kjkomatsu/test-repo
+git push origin master
+git remote -v show
+
+# Sync up local and remote repository
+# Should always do before pushing to repo
+git pull origin master
+git push origin master
+
+# List files tracked
+git ls-files
+
+# Undoing changes
+## Move back changes from staging to working
+git reset HEAD level1/level1-file.txt
+## Get committed changes back
+git checkout -- level1/level1-file.txt
+
+# Renaming files
+git mv level3-file.txt level3.txt
+git commit
+## Updates index, may need when doing 'git add <file>' when file was
+##a renamed file
+git add -u
+
+# Deleting file
+git rm newfile.txt
+git commit -m "Deleting newfile.txt"
+git rm hipsum.txt
+git reset HEAD hipsum.txt
+git checkout -- hipsum.txt
+
+# History <-- We can do this even after deleted
+git log
+git log --abbrev-commit
+git log -all --oneline --graph --decorate
+git log --oneline 63d3fbb...ea31f04
+git log --since="3 days ago"
+git log -- hipster.txt
+git log --follow -- level1/level2/level2.txt
+git show <id>
+
+# Aliases
+git config --global alias.hist "log --all --graph --decorate --oneline"
+
+# Ignoring files/dirs
+Create .gitignore and enter file/dir per line
+git add .gitignore
+git commit .gitignore
+## Contents can wildcard
+*.log
+log
+foobar
+
+# Config p4merge
+git config --global diff.tool p4merge
+git config --global difftool.p4merge.path /Applications/p4merge.app/Contents/MacOS/p4merge
+git config --global difftool.prompt false
+git diff
+git difftool
+git difftool HEAD
+git difftool 1458a90
+git diff --staged HEAD # Diff from staged to committed
+git diff -- <filename> # Just for a specific file
+git diff HEAD HEAD^ # Head and head-1
+git diff master origin/master # Compare with what's in github
+
+# Branches
+git branch -a # Shows all branches
+              # * is active branch
+git branch mynewbranch
+git checkout mynewbranch
+git branch -m mynewbranch newbranch # Rename
+git branch -d newbranch # delete
+git checkout -b title-change # Create and checkout new branch in one command
+git merge title-change # After you checkout master first, this is fast forward
+git merge add-copyright --no-ff # No fastforward, so we get a commit message
+git mergetool # Resolving merge
+
+# Rebase
+git rebase master # Run from your working branch to get changes from master
+git rebase --abort # Abort a rebase in conflict
+git mergetool # Fix conflicts
+git rebase --continue
+
+# Fetch/pull/rebase
+git fetch origin master # only updates references between local and remote
+## There's a divergence
+git pull --rebase origin master
+
+# Stashing
+git stash
+git stash -u # include untracked files
+git stash apply
+git stash drop
+git stash pop # apply and drop
+git stash save "first change"
+git stash save "second change"
+git stash show stash@{1}
+git stash drop stash@{1}
+git stash clear # gets rid of all stashes
+git stash branch newchanges # creates new branch, applies stash and drops stash
+
+# Tagging
+git tag MyTag
+git tag --list
+git show MyTag
+git tag --delete MyTag
+git tag -a v-1.0 # annotate a tag
+git diff v-1.0 v-1.1
+git tag -a v-0.8-alpha c25d08a # Tag a specific commit
+git tag -a v-0.8-alpha -f e8624f5 # Move tag to a specific commit
+git push origin v-0.9-beta # Add the tag and push to github
+git push origin master --tags # Push all including tags
+git push origin :v-0.8-alpha # remove a tag from github
+
+# Resets
+git reset HEAD^^
+git reset a71beaf
+git reflog
+
+# Cherrypicking changes
+git cherry-pick a71beaf
